@@ -120,14 +120,10 @@ func (n Uint) GormValue(ctx context.Context, db *gorm.DB) clause.Expr {
 		if !n.isValid {
 			return clause.Expr{SQL: "?", Vars: []interface{}{nil}}
 		}
-		value := strconv.FormatUint(uint64(n.realValue), 2)
-		leadingZero := 64 - len(value)
-		for leadingZero > 0 {
-			value = "0" + value
-			leadingZero--
-		}
-		return clause.Expr{SQL: "?", Vars: []interface{}{value}}
+
+		return clause.Expr{SQL: "?", Vars: []interface{}{n.realValue}}
 	}
+
 	return clause.Expr{}
 }
 
