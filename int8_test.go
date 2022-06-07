@@ -3,7 +3,7 @@ package nullable_test
 import (
 	"testing"
 
-	"github.com/Thor-x86/nullable"
+	"github.com/Valdenirmezadri/nullable"
 	"gorm.io/gorm/utils/tests"
 )
 

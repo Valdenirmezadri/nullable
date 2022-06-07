@@ -56,7 +56,7 @@ Remember, all you need to have is a basic variable and a nullable variable creat
 import (
     "fmt"
     "gorm.io/gorm"
-    "github.com/Thor-x86/nullable"
+    "github.com/Valdenirmezadri/nullable"
 )
 
 func main() {
@@ -81,7 +81,7 @@ You'll use `.Set(&anotherBasicVar)` to change existing variable. Example:
 import (
     "fmt"
     "gorm.io/gorm"
-    "github.com/Thor-x86/nullable"
+    "github.com/Valdenirmezadri/nullable"
 )
 
 func main() {
@@ -107,7 +107,7 @@ Also another example for uint64:
 import (
     "fmt"
     "gorm.io/gorm"
-    "github.com/Thor-x86/nullable"
+    "github.com/Valdenirmezadri/nullable"
 )
 
 func main() {
@@ -135,7 +135,7 @@ If you thinking it's not really convenient to create a basic variable first, the
 import (
     "fmt"
     "gorm.io/gorm"
-    "github.com/Thor-x86/nullable"
+    "github.com/Valdenirmezadri/nullable"
 )
 
 func main() {
