@@ -19,34 +19,29 @@ type Uint struct {
 }
 
 // NewUint creates a new nullable unsigned integer
-func NewUint(value *uint) Uint {
-	if value == nil {
+func NewUint(value uint) Uint {
+	if value == 0 {
 		return Uint{
 			realValue: 0,
 			isValid:   false,
 		}
 	}
 	return Uint{
-		realValue: *value,
+		realValue: value,
 		isValid:   true,
 	}
 }
 
 // Get either nil or unsigned integer
-func (n Uint) Get() *uint {
-	if !n.isValid {
-		return nil
-	}
-	return &n.realValue
+func (n Uint) Get() uint {
+	return n.realValue
 }
 
 // Set either nil or unsigned integer
-func (n *Uint) Set(value *uint) {
-	n.isValid = (value != nil)
+func (n *Uint) Set(value uint) {
+	n.isValid = (value > 0)
 	if n.isValid {
-		n.realValue = *value
-	} else {
-		n.realValue = 0
+		n.realValue = value
 	}
 }
 
@@ -59,8 +54,6 @@ func (n Uint) MarshalJSON() ([]byte, error) {
 func (n *Uint) UnmarshalJSON(data []byte) error {
 	dataString := string(data)
 	if len(dataString) == 0 || dataString == "null" {
-		n.isValid = false
-		n.realValue = 0
 		return nil
 	}
 
@@ -69,8 +62,11 @@ func (n *Uint) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	n.isValid = true
-	n.realValue = parsed
+	if parsed > 0 {
+		n.isValid = true
+		n.realValue = parsed
+	}
+
 	return nil
 }
 
