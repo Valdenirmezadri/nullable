@@ -91,23 +91,23 @@ func TestUint16(t *testing.T) {
 		Value: nullable.NewUint16(protonEnergy),
 		Unit:  "Joule",
 	}
-	DB.Create(&proton)
+	DB.Debug().Create(&proton)
 
 	neutron := TestNullableUint16{
 		Name:  "neutron",
 		Value: nullable.NewUint16(0),
 		Unit:  "Joule",
 	}
-	DB.Create(&neutron)
+	DB.Debug().Create(&neutron)
 
 	var result1 TestNullableUint16
-	if err := DB.First(&result1, "name = ?", "proton").Error; err != nil {
+	if err := DB.Debug().First(&result1, "name = ?", "proton").Error; err != nil {
 		t.Fatal("Cannot read uint16 test record of \"proton\"")
 	}
 	tests.AssertEqual(t, result1, proton)
 
 	var result2 TestNullableUint16
-	if err := DB.First(&result2, "name = ?", "neutron").Error; err != nil {
+	if err := DB.Debug().First(&result2, "name = ?", "neutron").Error; err != nil {
 		t.Fatal("Cannot read uint16 test record of \"neutron\"")
 	}
 	tests.AssertEqual(t, result2, neutron)

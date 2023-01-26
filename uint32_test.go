@@ -112,23 +112,23 @@ func TestUint32(t *testing.T) {
 		Value: nullable.NewUint32(protonEnergy),
 		Unit:  "Joule",
 	}
-	DB.Create(&proton)
+	DB.Debug().Create(&proton)
 
 	neutron := TestNullableUint32{
 		Name:  "neutron",
 		Value: nullable.NewUint32(0),
 		Unit:  "Joule",
 	}
-	DB.Create(&neutron)
+	DB.Debug().Create(&neutron)
 
 	var result1 TestNullableUint32
-	if err := DB.First(&result1, "name = ?", "proton").Error; err != nil {
+	if err := DB.Debug().First(&result1, "name = ?", "proton").Error; err != nil {
 		t.Fatal("Cannot read uint32 test record of \"proton\"")
 	}
 	tests.AssertEqual(t, result1, proton)
 
 	var result2 TestNullableUint32
-	if err := DB.First(&result2, "name = ?", "neutron").Error; err != nil {
+	if err := DB.Debug().First(&result2, "name = ?", "neutron").Error; err != nil {
 		t.Fatal("Cannot read uint32 test record of \"neutron\"")
 	}
 	tests.AssertEqual(t, result2, neutron)
