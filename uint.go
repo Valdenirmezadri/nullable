@@ -39,10 +39,7 @@ func (n Uint) Get() uint {
 
 // Set either nil or unsigned integer
 func (n *Uint) Set(value uint) {
-	n.isValid = (value > 0)
-	if n.isValid {
-		n.realValue = value
-	}
+	n.realValue = value
 }
 
 // MarshalJSON converts current value to JSON

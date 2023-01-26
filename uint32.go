@@ -38,10 +38,7 @@ func (n Uint32) Get() uint32 {
 
 // Set either nil or 32-bit unsigned integer
 func (n *Uint32) Set(value uint32) {
-	n.isValid = (value > 0)
-	if n.isValid {
-		n.realValue = value
-	}
+	n.realValue = value
 }
 
 // MarshalJSON converts current value to JSON
@@ -140,7 +137,7 @@ func (Uint32) GormDBDataType(db *gorm.DB, field *schema.Field) string {
 	case "sqlite", "mysql":
 		return "INT UNSIGNED"
 	case "postgres":
-		return "bigint" //"bit(32)"
+		return "integer"
 	}
 	return ""
 }
