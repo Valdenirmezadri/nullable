@@ -38,7 +38,10 @@ func (n Uint16) Get() uint16 {
 
 // Set either nil or 16-bit unsigned integer
 func (n *Uint16) Set(value uint16) {
-	n.realValue = value
+	n.isValid = (value > 0)
+	if n.isValid {
+		n.realValue = value
+	}
 }
 
 // MarshalJSON converts current value to JSON

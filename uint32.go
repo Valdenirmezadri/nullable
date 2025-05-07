@@ -38,7 +38,10 @@ func (n Uint32) Get() uint32 {
 
 // Set either nil or 32-bit unsigned integer
 func (n *Uint32) Set(value uint32) {
-	n.realValue = value
+	n.isValid = (value > 0)
+	if n.isValid {
+		n.realValue = value
+	}
 }
 
 // MarshalJSON converts current value to JSON

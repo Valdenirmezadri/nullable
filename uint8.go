@@ -37,7 +37,10 @@ func (n Uint8) Get() uint8 {
 
 // Set either nil or 8-bit integer
 func (n *Uint8) Set(value uint8) {
-	n.realValue = value
+	n.isValid = (value > 0)
+	if n.isValid {
+		n.realValue = value
+	}
 }
 
 // MarshalJSON converts current value to JSON
