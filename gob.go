@@ -3,6 +3,7 @@ package nullable
 import (
 	"encoding/gob"
 	"fmt"
+	"time"
 )
 
 func init() {
@@ -11,6 +12,31 @@ func init() {
 	gob.Register(Uint32{})
 	gob.Register(Uint{})
 	gob.Register(String{})
+	gob.Register(Time{})
+}
+
+// Time
+func (n Time) GobEncode() ([]byte, error) {
+	if !n.isValid {
+		return []byte{0}, nil
+	}
+	timeBytes, err := n.realValue.MarshalBinary()
+	if err != nil {
+		return nil, err
+	}
+	return append([]byte{1}, timeBytes...), nil
+}
+
+func (n *Time) GobDecode(data []byte) error {
+	if len(data) < 1 {
+		return fmt.Errorf("invalid gob data for Time")
+	}
+	n.isValid = data[0] == 1
+	n.realValue = time.Time{}
+	if n.isValid {
+		return n.realValue.UnmarshalBinary(data[1:])
+	}
+	return nil
 }
 
 // Uint8

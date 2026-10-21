@@ -13,35 +13,14 @@ import (
 
 // Uint32 SQL type that can retrieve NULL value
 type Uint32 struct {
-	realValue uint32
-	isValid   bool
+	Default[uint32]
 }
 
 // NewUint32 creates a new nullable 32-bit unsigned integer
 func NewUint32(value uint32) Uint32 {
-	if value == 0 {
-		return Uint32{
-			realValue: 0,
-			isValid:   false,
-		}
-	}
-	return Uint32{
-		realValue: value,
-		isValid:   true,
-	}
-}
-
-// Get either nil or 32-bit unsigned integer
-func (n Uint32) Get() uint32 {
-	return n.realValue
-}
-
-// Set either nil or 32-bit unsigned integer
-func (n *Uint32) Set(value uint32) {
-	n.isValid = (value > 0)
-	if n.isValid {
-		n.realValue = value
-	}
+	n := Uint32{}
+	n.Set(value)
+	return n
 }
 
 // MarshalJSON converts current value to JSON
@@ -63,8 +42,7 @@ func (n *Uint32) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	n.isValid = true
-	n.realValue = parsed
+	n.Set(parsed)
 	return nil
 }
 
@@ -89,9 +67,7 @@ func (n *Uint32) Scan(value interface{}) error {
 	if err != nil {
 		return err
 	}
-	n.realValue = uint32(parsed)
-
-	n.isValid = true
+	n.Set(uint32(parsed))
 	return nil
 }
 

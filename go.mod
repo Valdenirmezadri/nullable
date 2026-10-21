@@ -1,11 +1,12 @@
 module github.com/Valdenirmezadri/nullable
 
-go 1.17
+go 1.18
 
 require gorm.io/gorm v1.23.5
 
 require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/graphql-go/graphql v0.7.9
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.12.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

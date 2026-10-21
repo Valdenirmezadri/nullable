@@ -14,35 +14,14 @@ import (
 
 // Uint SQL type that can retrieve NULL value
 type Uint struct {
-	realValue uint
-	isValid   bool
+	Default[uint]
 }
 
 // NewUint creates a new nullable unsigned integer
 func NewUint(value uint) Uint {
-	if value == 0 {
-		return Uint{
-			realValue: 0,
-			isValid:   false,
-		}
-	}
-	return Uint{
-		realValue: value,
-		isValid:   true,
-	}
-}
-
-// Get either nil or unsigned integer
-func (n Uint) Get() uint {
-	return n.realValue
-}
-
-// Set either nil or unsigned integer
-func (n *Uint) Set(value uint) {
-	n.isValid = (value > 0)
-	if n.isValid {
-		n.realValue = value
-	}
+	n := Uint{}
+	n.Set(value)
+	return n
 }
 
 // MarshalJSON converts current value to JSON
@@ -62,11 +41,7 @@ func (n *Uint) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	if parsed > 0 {
-		n.isValid = true
-		n.realValue = parsed
-	}
-
+	n.Set(parsed)
 	return nil
 }
 
@@ -91,9 +66,7 @@ func (n *Uint) Scan(value interface{}) error {
 	if err != nil {
 		return err
 	}
-	n.realValue = uint(parsed)
-
-	n.isValid = true
+	n.Set(uint(parsed))
 	return nil
 }
 

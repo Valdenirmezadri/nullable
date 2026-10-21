@@ -12,35 +12,14 @@ import (
 
 // Uint8 SQL type that can retrieve NULL value
 type Uint8 struct {
-	realValue uint8
-	isValid   bool
+	Default[uint8]
 }
 
 // NewUint8 creates a new nullable 8-bit integer
 func NewUint8(value uint8) Uint8 {
-	if value == 0 {
-		return Uint8{
-			realValue: 0,
-			isValid:   false,
-		}
-	}
-	return Uint8{
-		realValue: value,
-		isValid:   true,
-	}
-}
-
-// Get either nil or 8-bit integer
-func (n Uint8) Get() uint8 {
-	return n.realValue
-}
-
-// Set either nil or 8-bit integer
-func (n *Uint8) Set(value uint8) {
-	n.isValid = (value > 0)
-	if n.isValid {
-		n.realValue = value
-	}
+	n := Uint8{}
+	n.Set(value)
+	return n
 }
 
 // MarshalJSON converts current value to JSON
@@ -62,8 +41,7 @@ func (n *Uint8) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	n.isValid = true
-	n.realValue = parsed
+	n.Set(parsed)
 	return nil
 }
 
@@ -78,9 +56,7 @@ func (n *Uint8) Scan(value interface{}) error {
 	if err := convertAssign(&i64, value); err != nil {
 		return err
 	}
-	n.realValue = uint8(i64)
-
-	n.isValid = true
+	n.Set(uint8(i64))
 	return nil
 }
 

@@ -13,35 +13,14 @@ import (
 
 // Uint16 SQL type that can retrieve NULL value
 type Uint16 struct {
-	realValue uint16
-	isValid   bool
+	Default[uint16]
 }
 
 // NewUint16 creates a new nullable 16-bit unsigned integer
 func NewUint16(value uint16) Uint16 {
-	if value == 0 {
-		return Uint16{
-			realValue: 0,
-			isValid:   false,
-		}
-	}
-	return Uint16{
-		realValue: value,
-		isValid:   true,
-	}
-}
-
-// Get either nil or 16-bit unsigned integer
-func (n Uint16) Get() uint16 {
-	return n.realValue
-}
-
-// Set either nil or 16-bit unsigned integer
-func (n *Uint16) Set(value uint16) {
-	n.isValid = (value > 0)
-	if n.isValid {
-		n.realValue = value
-	}
+	n := Uint16{}
+	n.Set(value)
+	return n
 }
 
 // MarshalJSON converts current value to JSON
@@ -61,11 +40,7 @@ func (n *Uint16) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	if parsed > 0 {
-		n.isValid = true
-		n.realValue = parsed
-	}
-
+	n.Set(parsed)
 	return nil
 }
 
@@ -90,9 +65,7 @@ func (n *Uint16) Scan(value interface{}) error {
 	if err != nil {
 		return err
 	}
-	n.realValue = uint16(parsed)
-
-	n.isValid = true
+	n.Set(uint16(parsed))
 	return nil
 }
 

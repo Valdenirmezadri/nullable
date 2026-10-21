@@ -10,35 +10,14 @@ import (
 
 // String SQL type that can retrieve NULL value
 type String struct {
-	realValue string
-	isValid   bool
+	Default[string]
 }
 
 // NewString creates a new nullable string
 func NewString(value string) String {
-	if value == "" {
-		return String{
-			realValue: "",
-			isValid:   false,
-		}
-	}
-	return String{
-		realValue: value,
-		isValid:   true,
-	}
-}
-
-// Get either nil or string
-func (n String) Get() string {
-	return n.realValue
-}
-
-// Set either nil or string
-func (n *String) Set(value string) {
-	n.isValid = (value != "")
-	if n.isValid {
-		n.realValue = value
-	}
+	n := String{}
+	n.Set(value)
+	return n
 }
 
 // MarshalJSON converts current value to JSON
@@ -58,8 +37,7 @@ func (n *String) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	n.isValid = true
-	n.realValue = parsed
+	n.Set(parsed)
 	return nil
 }
 
@@ -69,8 +47,12 @@ func (n *String) Scan(value interface{}) error {
 		n.realValue, n.isValid = "", false
 		return nil
 	}
-	n.isValid = true
-	return convertAssign(&n.realValue, value)
+	var scanned string
+	if err := convertAssign(&scanned, value); err != nil {
+		return err
+	}
+	n.Set(scanned)
+	return nil
 }
 
 // Value implements the driver Valuer interface.
