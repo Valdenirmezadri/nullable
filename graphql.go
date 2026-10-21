@@ -57,6 +57,9 @@ var (
 
 // newScalar builds a scalar whose Serialize calls Get() and whose inputs go
 // through parse. Invalid input returns nil, so graphql-go rejects the argument.
+//
+// Input arrives in params.Args as the plain value (time.Time, string, int),
+// not the nullable type: the usecase converts, like any other argument.
 func newScalar[T comparable, N interface{ Get() T }](name, description string, parse func(string) (N, error)) *graphql.Scalar {
 	parseAny := func(value interface{}) interface{} {
 		s, ok := scalarString(value)
@@ -64,14 +67,14 @@ func newScalar[T comparable, N interface{ Get() T }](name, description string, p
 			return nil
 		}
 		if s == "" {
-			var null N
-			return null
+			var zero T
+			return plain(zero)
 		}
 		parsed, err := parse(s)
 		if err != nil {
 			return nil
 		}
-		return parsed
+		return plain(parsed.Get())
 	}
 
 	return graphql.NewScalar(graphql.ScalarConfig{
@@ -89,6 +92,22 @@ func newScalar[T comparable, N interface{ Get() T }](name, description string, p
 			return parseAny(valueAST)
 		},
 	})
+}
+
+// plain hands unsigned numbers over as int, the same type graphql.Int gives,
+// so the usual int param helpers read them
+func plain(value interface{}) interface{} {
+	switch v := value.(type) {
+	case uint:
+		return int(v)
+	case uint8:
+		return int(v)
+	case uint16:
+		return int(v)
+	case uint32:
+		return int(v)
+	}
+	return value
 }
 
 // scalarString normalizes what arrives from variables (JSON) and from literals

@@ -42,9 +42,13 @@ func run(t *testing.T, query string, vars map[string]interface{}) map[string]int
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					e := event{}
-					e.ID, _ = p.Args["id"].(nullable.Uint)
-					e.At, _ = p.Args["at"].(nullable.Time)
-					e.Nm, _ = p.Args["nm"].(nullable.String)
+					// argumento chega como tipo comum; quem converte é o usecase
+					id, _ := p.Args["id"].(int)
+					at, _ := p.Args["at"].(time.Time)
+					nm, _ := p.Args["nm"].(string)
+					e.ID = nullable.NewUint(uint(id))
+					e.At = nullable.NewTime(at)
+					e.Nm = nullable.NewString(nm)
 					return e, nil
 				},
 			},
