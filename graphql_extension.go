@@ -30,7 +30,7 @@ var nullableScalars = map[*graphql.Scalar]bool{
 
 func (GraphqlExtension) ResolveFieldDidStart(ctx context.Context, info *graphql.ResolveInfo) (context.Context, graphql.ResolveFieldFinishFunc) {
 	return ctx, func(value interface{}, _ error) {
-		if _, ok := value.(interface{ IsNull() bool }); !ok {
+		if !isNullableType(value) {
 			return
 		}
 
@@ -46,6 +46,18 @@ func (GraphqlExtension) ResolveFieldDidStart(ctx context.Context, info *graphql.
 		panic(fmt.Errorf("field %s.%s is %T but the schema uses %s: use the nullable.Graphql*Type scalar",
 			info.ParentType.Name(), info.FieldName, value, info.ReturnType))
 	}
+}
+
+// isNullableType matches only this package's types. A type built on one
+// (type Status nullable.Uint8) also gets IsNull() through the embedded
+// Default, but has its own Value/Scan and its own scalar, so it is skipped.
+func isNullableType(value interface{}) bool {
+	switch value.(type) {
+	case Uint, Uint8, Uint16, Uint32, String, Time,
+		*Uint, *Uint8, *Uint16, *Uint32, *String, *Time:
+		return true
+	}
+	return false
 }
 
 func (GraphqlExtension) Name() string { return "nullable" }
